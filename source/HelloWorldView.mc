@@ -3,6 +3,7 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 import Toybox.Time.Gregorian;
+import Toybox.Math;
 
 class HelloWorldView extends WatchUi.WatchFace {
 
@@ -12,7 +13,7 @@ class HelloWorldView extends WatchUi.WatchFace {
 
     // Load your resources here
     function onLayout(dc as Dc) as Void {
-        setLayout(Rez.Layouts.WatchFace(dc));
+        // setLayout(Rez.Layouts.WatchFace(dc));
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -27,12 +28,50 @@ class HelloWorldView extends WatchUi.WatchFace {
         var screenHeight = dc.getHeight();
         var screenCenterX = screenWidth / 2;
 
-        // background
-        dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_BLUE);
+        // Get current time
+        var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+
+        // Time float
+        var timeFloat = now.hour + (now.min / 60.0);
+        var brightness = 0.0;
+
+        if (timeFloat < 6 || timeFloat > 21) {
+            brightness = 0.0;
+        } else if (timeFloat <= 12) {
+            brightness = (timeFloat - 6) / 6.0;
+        } else {
+            brightness = (21 - timeFloat) / 9.0;
+        }
+
+        // Clear screen
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
-        // Get and show the current time and date
-        var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+        // Interpolate day and night colours
+        var nightR = 5;   var nightG = 5;   var nightB = 15;
+        var noonR = 50;   var noonG = 130;  var noonB = 220;
+
+        var r = Math.round(nightR + (noonR - nightR) * brightness).toNumber();
+        var g = Math.round(nightG + (noonG - nightG) * brightness).toNumber();
+        var b = Math.round(nightB + (noonB - nightB) * brightness).toNumber();
+
+        var groundNightR = 5;   var groundNightG = 15;  var groundNightB = 5;
+        var groundNoonR = 50;   var groundNoonG = 140;  var groundNoonB = 50;
+
+        var gr = Math.round(groundNightR + (groundNoonR - groundNightR) * brightness).toNumber();
+        var gg = Math.round(groundNightG + (groundNoonG - groundNightG) * brightness).toNumber();
+        var gb = Math.round(groundNightB + (groundNoonB - groundNightB) * brightness).toNumber();
+
+        // Sunset/Sunrise Background
+        //Sky
+        dc.setColor(Graphics.createColor(255, r, g, b), Graphics.createColor(255, r, g, b));
+        dc.fillRectangle(0, 0, screenWidth, screenHeight / 3 * 2);
+
+        // Ground
+        dc.setColor(Graphics.createColor(255, gr, gg, gb), Graphics.createColor(255, gr, gg, gb));
+        dc.fillRectangle(0, screenHeight / 3 * 2, screenWidth, screenHeight / 3);
+
+        // show the current time and date
         var timeString = Lang.format("$1$:$2$:$3$", [now.hour, now.min.format("%02d"), now.sec.format("%02d")]);
 
         var dateString = Lang.format("$1$/$2$/$3$", [now.day, now.month, now.year]);
