@@ -2,6 +2,7 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
+import Toybox.Time.Gregorian;
 
 class HelloWorldView extends WatchUi.WatchFace {
 
@@ -23,10 +24,17 @@ class HelloWorldView extends WatchUi.WatchFace {
     // Update the view
     function onUpdate(dc as Dc) as Void {
         // Get and show the current time
-        var clockTime = System.getClockTime();
-        var timeString = Lang.format("$1$:$2$:$3$", [clockTime.hour, clockTime.min.format("%02d"), clockTime.sec.format("%02d")]);
-        var view = View.findDrawableById("TimeLabel") as Text;
-        view.setText(timeString);
+        // var clockTime = System.getClockTime();
+        var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+        var timeString = Lang.format("$1$:$2$:$3$", [now.hour, now.min.format("%02d"), now.sec.format("%02d")]);
+
+        var dateString = Lang.format("$1$/$2$/$3$", [now.day, now.month, now.year]);
+        
+        var timeView = View.findDrawableById("TimeLabel") as Text;
+        timeView.setText(timeString);
+
+        var dateView = View.findDrawableById("DateLabel") as Text;
+        dateView.setText(dateString);
 
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
