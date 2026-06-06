@@ -23,8 +23,7 @@ class HelloWorldView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
-        // Get and show the current time
-        // var clockTime = System.getClockTime();
+        // Get and show the current time and date
         var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var timeString = Lang.format("$1$:$2$:$3$", [now.hour, now.min.format("%02d"), now.sec.format("%02d")]);
 
@@ -35,6 +34,18 @@ class HelloWorldView extends WatchUi.WatchFace {
 
         var dateView = View.findDrawableById("DateLabel") as Text;
         dateView.setText(dateString);
+
+        // Show and update battery level
+        var batteryLevel = System.getSystemStats().battery;
+        var batteryView = View.findDrawableById("BatteryLabel") as Text;
+        batteryView.setText(Lang.format("Battery: $1$%", [batteryLevel.format("%d")]));
+
+        // Set text color conditionally
+        if (batteryLevel < 20) {
+            batteryView.setColor(Graphics.COLOR_RED);
+        } else {
+            batteryView.setColor(Graphics.COLOR_WHITE);
+        }
 
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);

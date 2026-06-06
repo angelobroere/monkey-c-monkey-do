@@ -15,4 +15,12 @@
         justification="Graphics.TEXT_JUSTIFY_CENTER"
         color="Graphics.COLOR_BLUE"
     />
+    <label
+        id="BatteryLabel"
+        x="center"
+        y="75%"
+        font="Graphics.FONT_SMALL"
+        justification="Graphics.TEXT_JUSTIFY_CENTER"
+        color="Graphics.COLOR_WHITE"
+    />
 </layout>
