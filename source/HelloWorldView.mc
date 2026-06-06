@@ -23,37 +23,45 @@ class HelloWorldView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
+        var screenWidth = dc.getWidth();
+        var screenHeight = dc.getHeight();
+        var screenCenterX = screenWidth / 2;
+
+        // background
+        dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_BLUE);
+        dc.clear();
+
         // Get and show the current time and date
         var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var timeString = Lang.format("$1$:$2$:$3$", [now.hour, now.min.format("%02d"), now.sec.format("%02d")]);
 
         var dateString = Lang.format("$1$/$2$/$3$", [now.day, now.month, now.year]);
         
-        var timeView = View.findDrawableById("TimeLabel") as Text;
-        timeView.setText(timeString);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(screenCenterX, screenHeight * 0.20, Graphics.FONT_MEDIUM, timeString, Graphics.TEXT_JUSTIFY_CENTER);
 
-        var dateView = View.findDrawableById("DateLabel") as Text;
-        dateView.setText(dateString);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(screenCenterX, screenHeight * 0.30, Graphics.FONT_SMALL, dateString, Graphics.TEXT_JUSTIFY_CENTER);
 
         // Show and update battery level or charging status
-        var batteryView = View.findDrawableById("BatteryLabel") as Text;
+        var stats = System.getSystemStats();
         var chargingStrings = ["charging", "charging .", "charging ..", "charging ..."];
-        if (System.getSystemStats().charging) {
-            batteryView.setText(chargingStrings[now.sec % 4]);
-        } else {
-            var batteryLevel = System.getSystemStats().battery;
-            batteryView.setText(Lang.format("Battery: $1$%", [batteryLevel.format("%d")]));
 
-            // Set text color conditionally
+        if (stats.charging) {
+            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(screenWidth * 0.30, screenHeight * 0.75, Graphics.FONT_SMALL, chargingStrings[now.sec % 4], Graphics.TEXT_JUSTIFY_LEFT);
+        } else {
+            var batteryLevel = stats.battery;
+            var batteryString = Lang.format("Battery: $1$%", [batteryLevel.format("%d")]);
+
             if (batteryLevel < 20) {
-                batteryView.setColor(Graphics.COLOR_RED);
+                dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
             } else {
-                batteryView.setColor(Graphics.COLOR_WHITE);
+                dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
             }
+            dc.drawText(screenWidth * 0.30, screenHeight * 0.75, Graphics.FONT_SMALL, batteryString, Graphics.TEXT_JUSTIFY_LEFT);
         }
 
-        // Call the parent onUpdate function to redraw the layout
-        View.onUpdate(dc);
     }
 
     // Called when this View is removed from the screen. Save the
