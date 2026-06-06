@@ -35,16 +35,21 @@ class HelloWorldView extends WatchUi.WatchFace {
         var dateView = View.findDrawableById("DateLabel") as Text;
         dateView.setText(dateString);
 
-        // Show and update battery level
-        var batteryLevel = System.getSystemStats().battery;
+        // Show and update battery level or charging status
         var batteryView = View.findDrawableById("BatteryLabel") as Text;
-        batteryView.setText(Lang.format("Battery: $1$%", [batteryLevel.format("%d")]));
-
-        // Set text color conditionally
-        if (batteryLevel < 20) {
-            batteryView.setColor(Graphics.COLOR_RED);
+        var chargingStrings = ["charging", "charging .", "charging ..", "charging ..."];
+        if (System.getSystemStats().charging) {
+            batteryView.setText(chargingStrings[now.sec % 4]);
         } else {
-            batteryView.setColor(Graphics.COLOR_WHITE);
+            var batteryLevel = System.getSystemStats().battery;
+            batteryView.setText(Lang.format("Battery: $1$%", [batteryLevel.format("%d")]));
+
+            // Set text color conditionally
+            if (batteryLevel < 20) {
+                batteryView.setColor(Graphics.COLOR_RED);
+            } else {
+                batteryView.setColor(Graphics.COLOR_WHITE);
+            }
         }
 
         // Call the parent onUpdate function to redraw the layout
