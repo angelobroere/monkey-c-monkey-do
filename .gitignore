@@ -1,0 +1,12 @@
+bin/
+*.prg
+*.iq
+
+developer_key
+developer_key.der
+*.der
+*.pem
+
+.vscode/settings.json
+
+.montana/
