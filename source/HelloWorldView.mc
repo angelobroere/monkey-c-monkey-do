@@ -38,10 +38,15 @@ class HelloWorldView extends WatchUi.WatchFace {
         if (timeFloat < 6 || timeFloat > 21) {
             brightness = 0.0;
         } else if (timeFloat <= 12) {
-            brightness = (timeFloat - 6) / 6.0;
+            var t = (timeFloat - 6) / 6.0;
+            brightness = Math.pow(t, 0.3);
         } else {
-            brightness = (21 - timeFloat) / 9.0;
+            var t = (21 - timeFloat) / 9.0;
+            brightness = Math.pow(t, 0.3);
         }
+
+        // The lowest brightness can go is 0.1
+        brightness = brightness < 0.1 ? 0.1 : brightness;
 
         // Clear screen
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
