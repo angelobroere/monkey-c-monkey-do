@@ -91,21 +91,21 @@ class HelloWorldView extends WatchUi.WatchFace {
 
         // Show and update battery level or charging status
         var stats = System.getSystemStats();
-        var chargingStrings = ["charging", "charging .", "charging ..", "charging ..."];
+        var chargingStrings = ["", ".", "..", "..."];
 
         if (stats.charging) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(screenWidth * 0.30, screenHeight * 0.75, Graphics.FONT_SMALL, chargingStrings[now.sec % 4], Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(screenWidth * 0.50, screenHeight * 0.85, Graphics.FONT_SMALL, chargingStrings[now.sec % 4], Graphics.TEXT_JUSTIFY_CENTER);
         } else {
             var batteryLevel = stats.battery;
-            var batteryString = Lang.format("Battery: $1$%", [batteryLevel.format("%d")]);
+            var batteryString = Lang.format("$1$%", [batteryLevel.format("%d")]);
 
             if (batteryLevel < 20) {
-                dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
             } else {
                 dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
             }
-            dc.drawText(screenWidth * 0.30, screenHeight * 0.75, Graphics.FONT_SMALL, batteryString, Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(screenWidth * 0.50, screenHeight * 0.85, Graphics.FONT_SMALL, batteryString, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
     }
