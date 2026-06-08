@@ -70,9 +70,25 @@ class HelloWorldView extends WatchUi.WatchFace {
         var gb = Math.round(groundNightB + (groundNoonB - groundNightB) * brightness).toNumber();
 
         // Sunset/Sunrise Background
-        //Sky
+        // Sky
+        var skyHeight = screenHeight / 3 * 2;
         dc.setColor(Graphics.createColor(255, r, g, b), Graphics.createColor(255, r, g, b));
-        dc.fillRectangle(0, 0, screenWidth, screenHeight / 3 * 2);
+        dc.fillRectangle(0, 0, screenWidth, skyHeight);
+
+        // Sun
+        var sunX = (timeFloat - 6.0) / (21.0 - 6.0) * screenWidth;
+        var sunHeight = 0.0;
+
+        if (timeFloat >= 6 && timeFloat <= 21) {
+            sunHeight = Math.sin((timeFloat - 6.0) / 15.0 * Math.PI);
+        }
+
+        // sunHeight 0.0 = horizon, 1.0 = top of sky
+        // invert because Y=0 is top of screen
+        var sunY = skyHeight * (1.0 - sunHeight);
+
+        dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
+        dc.fillCircle(sunX.toNumber(), sunY.toNumber(), 25);
 
         // Ground
         dc.setColor(Graphics.createColor(255, gr, gg, gb), Graphics.createColor(255, gr, gg, gb));
