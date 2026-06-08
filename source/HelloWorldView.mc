@@ -48,15 +48,17 @@ class HelloWorldView extends WatchUi.WatchFace {
         dc.clear();
 
         // Interpolate day and night colours
-        var nightR = 5;   var nightG = 5;   var nightB = 15;
-        var noonR = 50;   var noonG = 130;  var noonB = 220;
+        // Sky
+        var nightR = 10;  var nightG = 10;  var nightB = 40;   // deep dark navy
+        var noonR = 30;   var noonG = 160;  var noonB = 255;   // rich vivid blue
+
+        // Ground
+        var groundNightR = 10;  var groundNightG = 30;  var groundNightB = 10;  // dark forest green
+        var groundNoonR = 60;   var groundNoonG = 180;  var groundNoonB = 60;   // lush bright green
 
         var r = Math.round(nightR + (noonR - nightR) * brightness).toNumber();
         var g = Math.round(nightG + (noonG - nightG) * brightness).toNumber();
         var b = Math.round(nightB + (noonB - nightB) * brightness).toNumber();
-
-        var groundNightR = 5;   var groundNightG = 15;  var groundNightB = 5;
-        var groundNoonR = 50;   var groundNoonG = 140;  var groundNoonB = 50;
 
         var gr = Math.round(groundNightR + (groundNoonR - groundNightR) * brightness).toNumber();
         var gg = Math.round(groundNightG + (groundNoonG - groundNightG) * brightness).toNumber();
