@@ -90,6 +90,14 @@ class HelloWorldView extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
         dc.fillCircle(sunX.toNumber(), sunY.toNumber(), 25);
 
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+
+        // Sunrise on the left
+        dc.drawText(screenWidth * 0.15, skyHeight - 20, Graphics.FONT_XTINY, "06:00", Graphics.TEXT_JUSTIFY_LEFT);
+
+        // Sunset on the right
+        dc.drawText(screenWidth * 0.85, skyHeight - 20, Graphics.FONT_XTINY, "21:00", Graphics.TEXT_JUSTIFY_RIGHT);
+
         // Ground
         dc.setColor(Graphics.createColor(255, gr, gg, gb), Graphics.createColor(255, gr, gg, gb));
         dc.fillRectangle(0, screenHeight / 3 * 2, screenWidth, screenHeight / 3);
